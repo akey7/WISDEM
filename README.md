@@ -90,9 +90,14 @@ The installation instructions below use the environment name, "wisdem-env," but 
 6.  Now install all of the packages.  The instructions here assume that the user will be interacting with the source code and incorporating code updates frequently, so the python packages are set-up for development (`python setup.py develop`), instead of hard installs (`python setup.py install`).
 
         cd WISDEM
-        python setup.py develop 
+        pip install -e . 
         cd ..
+        
+6. For running tests, install `pytest`
 
+```
+conda install pytest
+```
 
 7. OPTIONAL: Install pyOptSparse, an package that provides a handful of additional optimization solvers and has OpenMDAO support:
 
