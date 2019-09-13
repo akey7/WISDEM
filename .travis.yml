@@ -19,9 +19,10 @@ install:
   - conda info -a
 
   # Replace dep1 dep2 ... with your dependencies
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION dep1 dep2 ...
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION compilers mpi4py petsc4py numpy scipy matplotlib conda-build six numpydoc networkx pyparsing packaging snowballstemmer pandas openpyxl xlrd jinja2 git imagesize idna docutils chardet babel alabaster sphinx sphinxcontrib ipython cython swig make sphinxcontrib-bibtex pydoe2 jsonschema ruamel_yaml
   - conda activate test-environment
+  - pip install OpenMDAO simpy
   - python setup.py install
 
 script:
-  # Your test script goes here
+  - pytest test/
