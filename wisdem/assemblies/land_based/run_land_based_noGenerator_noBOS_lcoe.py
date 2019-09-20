@@ -126,9 +126,11 @@ if __name__ == "__main__":
     prob.model.nonlinear_solver = NonlinearRunOnce()
     prob.model.linear_solver = DirectSolver()
 
+    # How to print a single output
+    # print(prob['plantfinancese.lcoe'])
+
     # This is an example of capturing the output of run_driver(), which prints
-    # directly to stdout, into a string. This output can then be compared be
-    # examined as shown a few lines below.
+    # directly to stdout, into a string.
 
     old_stdout = sys.stdout
     capture_stdout = StringIO()
@@ -138,10 +140,10 @@ if __name__ == "__main__":
     finally:
         sys.stdout = old_stdout
 
-    print(">>> Begin list of problem vars")
-    foo = prob.model.list_inputs(units=True)
-    # print(prob['plantfinancese.lcoe'])
-    
-    # This is how to examine the string output of run_driver
-    # print(capture_stdout.getvalue())
-    print("<<< End list of problem vars")
+    print("<><><><><><><><><><> Begin problem INPUTS <><><><><><><><><><>")
+    prob.model.list_inputs(units=True)
+    print("<><><><><><><><><><> End problem INPUTS <><><><><><><><><><>")
+
+    print("<><><><><><><><><><> Begin problem OUTPUTS <><><><><><><><><><>")
+    print(capture_stdout.getvalue())
+    print("<><><><><><><><><><> End problem OUTPUTS <><><><><><><><><><>")
