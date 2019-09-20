@@ -139,9 +139,9 @@ if __name__ == "__main__":
         sys.stdout = old_stdout
 
     print(">>> Begin list of problem vars")
-    # foo = prob.model.list_inputs()
+    foo = prob.model.list_inputs(units=True)
     # print(prob['plantfinancese.lcoe'])
     
     # This is how to examine the string output of run_driver
-    print(capture_stdout.getvalue())
+    # print(capture_stdout.getvalue())
     print("<<< End list of problem vars")
