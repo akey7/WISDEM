@@ -28,7 +28,7 @@ install:
   - conda update -q conda
   - conda config --add channels conda-forge
   - conda info -a
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION compilers mpi4py petsc4py numpy scipy matplotlib conda-build six numpydoc networkx pyparsing packaging snowballstemmer pandas openpyxl xlrd jinja2 git imagesize idna docutils chardet babel alabaster sphinx sphinxcontrib ipython cython swig make sphinxcontrib-bibtex pydoe2 jsonschema ruamel_yaml pyyaml mock pip nose networkx
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION compilers mpi4py petsc4py numpy=1.14.1 scipy matplotlib conda-build six numpydoc networkx pyparsing packaging snowballstemmer pandas openpyxl xlrd jinja2 git imagesize idna docutils chardet babel alabaster sphinx sphinxcontrib ipython cython swig make sphinxcontrib-bibtex pydoe2 jsonschema ruamel_yaml pyyaml mock pip nose networkx
   - conda activate test-environment
   - pip install simpy
   - sudo apt-get install gfortran
