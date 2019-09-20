@@ -1,3 +1,9 @@
+"""
+The purpose of this file is to run the land based turbine assembly
+in a completely self-contained manner, and test ideas that may
+be able to help with regression testing of this assembly.
+"""
+
 from __future__ import print_function
 from openmdao.api import Group, Problem, ScipyOptimizeDriver, SqliteRecorder, NonlinearRunOnce, DirectSolver
 import numpy as np
