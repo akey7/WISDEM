@@ -7,9 +7,8 @@ except:
     pass
 
 from wisdem.rotorse.rotor_geometry_yaml import ReferenceBlade
-from wisdem.commonse.mpi_tools import MPI
 
-from .land_based_noGenerator_noBOS_lcoe import Init_LandBasedAssembly, LandBasedTurbine
+from land_based_noGenerator_noBOS_lcoe import Init_LandBasedAssembly, LandBasedTurbine
 
 
 if __name__ == "__main__":
@@ -39,7 +38,8 @@ if __name__ == "__main__":
     prob.model.nonlinear_solver = NonlinearRunOnce()
     prob.model.linear_solver = DirectSolver()
 
-    if not MPI:
-        prob.model.approx_totals()
-
     prob.run_driver()
+
+    print(">>> Begin list of problem vars")
+    foo = prob.model.list_inputs()
+    print("<<< End list of problem vars")
