@@ -1,12 +1,7 @@
-sudo: false
+language: python
 
-os:
-  - linux
-
-env:
-  - PY=3.7 UPLOAD_DOCS=1
-
-language: generic
+python:
+  - "3.7"
 
 addons:
   apt:
@@ -20,11 +15,10 @@ addons:
     - openmpi-bin
 
 before_install:
-- if [ "$PY" = "2.7" ];  then wget "https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh" -O miniconda.sh; fi
-- if [ "$PY" = "3.7" ];  then wget "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" -O miniconda.sh; fi
-- chmod +x miniconda.sh;
-- ./miniconda.sh -b  -p /home/travis/miniconda;
-- export PATH=/home/travis/miniconda/bin:$PATH;
+- wget "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" -O miniconda.sh
+- bash miniconda.sh -b -p $HOME/miniconda
+- source "$HOME/miniconda/etc/profile.d/conda.sh"
+- export PATH=/home/travis/miniconda/bin:$PATH
 - if  [ "$TRAVIS_REPO_SLUG" = "your-org/your_project" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
     MASTER_BUILD=1;
   fi
