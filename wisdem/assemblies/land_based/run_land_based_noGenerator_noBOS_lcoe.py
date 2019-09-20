@@ -18,7 +18,8 @@ except:
 
 from wisdem.rotorse.rotor_geometry_yaml import ReferenceBlade
 
-from land_based_noGenerator_noBOS_lcoe import Init_LandBasedAssembly, LandBasedTurbine
+# from land_based_noGenerator_noBOS_lcoe import Init_LandBasedAssembly, LandBasedTurbine
+from wisdem.assemblies.land_based.land_based_noGenerator_noBOS_lcoe import Init_LandBasedAssembly, LandBasedTurbine
 from wisdem.rotorse.rotor import RotorSE, Init_RotorSE_wRefBlade
 
 
