@@ -38,7 +38,7 @@ The core modules draw upon some utility packages, which are typically compiled c
 * _pyoptsparse_ provides some additional optimization algorithms to OpenMDAO
 
 
-## Installation (Anaconda)
+## Installation
 
 Installation with [Anaconda](https://www.anaconda.com) is the recommended approach because of the ability to create self-contained environments suitable for testing and analysis.  WISDEM&reg; requires [Anaconda 64-bit](https://www.anaconda.com/distribution/).
 
@@ -56,7 +56,7 @@ The installation instructions below use the environment name, "wisdem-env," but 
 
         conda install -y wisdem
 
-3.  To open up the WISDEM tutorials, navigate to a directory that you want to place WISDEM&reg; and all of its files.  This directory may be located anywhere in the user's filesystem.
+3.  To open up the WISDEM tutorials, navigate to a directory where you want to place WISDEM and all of its files.
 
         conda install -y git jupyter
         git clone https://github.com/WISDEM/WISDEM.git
@@ -69,7 +69,7 @@ The installation instructions below use the environment name, "wisdem-env," but 
         conda install -y git jupyter
         git clone https://github.com/WISDEM/WISDEM.git
         cd WISDEM
-	python setup.py develop	
+        python setup.py develop	
 
 
 4. OPTIONAL: Install pyOptSparse, an package that provides a handful of additional optimization solvers and has OpenMDAO support:
