@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import pytest
 
-from landbosse.model import WeatherDelay
+from wisdem.landbosse.model import WeatherDelay
 
 
 SEASON_WINTER = 'winter'

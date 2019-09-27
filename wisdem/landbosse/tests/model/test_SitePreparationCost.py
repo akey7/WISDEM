@@ -1,9 +1,10 @@
 from unittest import TestCase
-from landbosse.model import SitePreparationCost
 import pandas as pd
-from landbosse.tests.model.test_WeatherDelay import generate_a_year
 import os
-from landbosse.tests.model.test_filename_functions import landbosse_test_input_dir
+
+from wisdem.landbosse.tests.model.test_filename_functions import landbosse_test_input_dir
+from wisdem.landbosse.tests.model.test_WeatherDelay import generate_a_year
+from wisdem.landbosse.model import SitePreparationCost
 
 pd.set_option('display.width', 6000)
 pd.set_option('display.max_columns', 20)

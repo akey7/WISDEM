@@ -1,9 +1,9 @@
 from unittest import TestCase
 import pandas as pd
-from landbosse.model import ErectionCost
 import os
-from landbosse.excelio import XlsxReader
-from landbosse.tests.model.test_filename_functions import landbosse_test_input_dir
+from wisdem.landbosse.model import ErectionCost
+from wisdem.landbosse.excelio import XlsxReader
+from wisdem.landbosse.tests.model.test_filename_functions import landbosse_test_input_dir
 import logging
 import sys
 

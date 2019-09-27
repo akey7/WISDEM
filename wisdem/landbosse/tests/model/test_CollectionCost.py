@@ -3,9 +3,9 @@ import os
 
 import pandas as pd
 
-from landbosse.model import Cable, Array, ArraySystem
-from landbosse.tests.model.test_WeatherDelay import generate_a_year
-from landbosse.tests.model.test_filename_functions import landbosse_test_input_dir
+from wisdem.landbosse.model import Cable, Array, ArraySystem
+from wisdem.landbosse.tests.model.test_WeatherDelay import generate_a_year
+from wisdem.landbosse.tests.model.test_filename_functions import landbosse_test_input_dir
 
 pd.set_option('display.width', 6000)
 pd.set_option('display.max_columns', 20)

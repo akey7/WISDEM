@@ -44,6 +44,23 @@ pymapExt   = Extension('wisdem.pymap._libmap', sources=glob.glob(os.path.join('w
                        extra_compile_args=pymapArgs,
                        include_dirs=[os.path.join('wisdem','include','lapack')])
 
+install_requires = [
+    'openmdao>= 2.0',
+    'numpy',
+    'scipy',
+    'pandas',
+    'simpy',
+
+    # For documentation
+    'pytest',
+
+    # For LandBOSSE
+    'sympy',
+    'shapely',
+    'xlsxwriter',
+    'xlrd'
+]
+
 # Top-level setup
 setup(
     name             = 'WISDEM',
@@ -53,7 +70,7 @@ setup(
     url              = 'https://github.com/WISDEM/WISDEM',
     author           = 'NREL WISDEM Team',
     author_email     = 'systems.engineering@nrel.gov',
-    install_requires = ['openmdao>= 2.0','numpy','scipy','pandas','simpy'],
+    install_requires = install_requires,
     package_data     =  {'wisdem': []},
     #package_dir      = {'': 'wisdem'},
     packages         = find_packages(exclude=['docs', 'tests', 'ext']),

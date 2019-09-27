@@ -1,7 +1,7 @@
 from unittest import TestCase
 import pandas as pd
 import pytest
-from landbosse.model import GridConnectionCost
+from wisdem.landbosse.model import GridConnectionCost
 
 class TestGridConnectionCost(TestCase):
 

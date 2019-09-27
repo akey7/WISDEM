@@ -1,6 +1,6 @@
 from unittest import TestCase
 import pandas as pd
-from landbosse.model import DevelopmentCost
+from wisdem.landbosse.model import DevelopmentCost
 
 
 class TestDevelopmentCost(TestCase):
