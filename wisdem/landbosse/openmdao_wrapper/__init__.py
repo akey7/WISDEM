@@ -1,1 +1,1 @@
-from .OpenMDAOComponent import OpenMDAOComponent
+from .LandBOSSEGroup import LandBOSSEGroup

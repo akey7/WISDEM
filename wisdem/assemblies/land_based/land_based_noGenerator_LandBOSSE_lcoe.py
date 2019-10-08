@@ -17,6 +17,7 @@ from wisdem.commonse.turbine_constraints import TurbineConstraints
 from wisdem.turbine_costsse.turbine_costsse_2015 import Turbine_CostsSE_2015
 from wisdem.plant_financese.plant_finance import PlantFinance
 from wisdem.drivetrainse.drivese_omdao import DriveSE
+from wisdem.landbosse.openmdao_wrapper import LandBOSSEGroup
 
 from wisdem.commonse.mpi_tools import MPI
 
@@ -135,6 +136,9 @@ class LandBasedTurbine(Group):
         # LCOE Calculation
         self.add_subsystem('plantfinancese', PlantFinance(verbosity=self.options['VerbosityCosts']),
                            promotes=['machine_rating', 'lcoe'])
+
+        # LandBOSSE
+        self.add_subsystem('landbosse', LandBOSSEGroup(), promotes=['*'])
 
         # Set up connections
 
@@ -374,4 +378,4 @@ if __name__ == "__main__":
     # prob.model.list_outputs(units=True)
 
     prob.run_driver()
-    # prob.check_partials(compact_print=True, method='fd', step=1e-6, form='central')
+    prob.check_partials(compact_print=True, method='fd', step=1e-6, form='central')
