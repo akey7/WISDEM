@@ -91,3 +91,7 @@ class LandBOSSEDummyComponent(om.ExplicitComponent):
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
         outputs['landbosse_foo'] = 1.0
+
+        print('################################################')
+        print(f"Dummy {outputs['landbosse_foo']}")
+        print('################################################')

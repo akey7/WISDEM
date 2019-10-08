@@ -309,8 +309,6 @@ if __name__ == "__main__":
 
     prob.run_driver()
 
-    print(prob['landbosse.dummy.landbosse_foo'])
-
     # # Initialize OpenMDAO problem and FloatingSE Group
     # if MPI:
     #     num_par_fd = MPI.COMM_WORLD.Get_size()
