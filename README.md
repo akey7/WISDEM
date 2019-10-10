@@ -4,7 +4,7 @@ The Wind-Plant Integrated System Design and Engineering Model (WISDEM&reg;) is a
 
 Hello. Make Travis work again!
 
-Author: [NREL WISDEM Team](mailto:systems.engineering@nrel.gov) 
+Author: [NREL WISDEM Team](mailto:systems.engineering@nrel.gov)
 
 ## Version
 
@@ -51,7 +51,7 @@ The installation instructions below use the environment name, "wisdem-env," but 
         conda config --add channels conda-forge
         conda create -y --name wisdem-env python=3.7
         conda activate wisdem-env
-    
+
     Note that older versions of anaconda on MacOS and Linux may require `source activate wisdem-env`
 
 2.  FOR USERS (NOT DEVELOPERS): Install WISDEM and its dependencies
@@ -64,18 +64,14 @@ The installation instructions below use the environment name, "wisdem-env," but 
         git clone https://github.com/WISDEM/WISDEM.git
 	cd WISDEM/tutorial-notebooks
 	jupyter notebook
-	
-2.  FOR DEVELOPERS (NOT USERS): Install WISDEM from source and its dependencies
 
-        conda install -y wisdem --only-deps
-        conda install -y git jupyter
+2.  FOR DEVELOPERS (NOT USERS): Use conda to install the build dependencies, but then install WISDEM from source
+
+        conda install -y wisdem git jupyter
+        conda remove --force wisdem
         git clone https://github.com/WISDEM/WISDEM.git
         cd WISDEM
-        python setup.py develop	
-        pip install -e . 
-        cd ..
-        
-6. For running tests, install `pytest`
+        python setup.py develop
 
 ```
 conda install pytest
