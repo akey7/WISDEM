@@ -4,10 +4,18 @@ from .DummyComponent import DummyComponent
 from .ManagementCostComponent import ManagementComponent
 
 class LandBOSSEGroup(om.Group):
+    def initialize(self):
+        self.options.declare('top_level_flag', default=True)
+
     def setup(self):
+        # if self.options['top_level_flag']:
+        #     shared_indeps = om.IndepVarComp()
+        #     shared_indeps.add_output('hub_height', val=0.0, units='m')
+        #     self.add_subsystem('indeps', shared_indeps, promotes=['*'])
+
         # Numeric inputs
         indeps = self.add_subsystem('indeps', om.IndepVarComp(), promotes=['*'])
-        indeps.add_output('construct_duration', units='m/s', desc='Total project construction time (months)', val=9)
+        indeps.add_output('construct_duration', desc='Total project construction time (months)', val=9)
         indeps.add_output('hub_height_meters', units='m', desc='Hub height m', val=80)
         indeps.add_output('rotor_diameter_m', units='m', desc='Rotor diameter m', val=77)
         indeps.add_output('wind_shear_exponent', units='m', desc='Wind shear exponent', val=0.2)
@@ -80,11 +88,11 @@ class LandBOSSEGroup(om.Group):
 
         # Dropping the column 'Override total management cost for distributed (0 does not override)'
 
-        indeps.add_output('markup_contingency', units='USD', desc='Markup contingency', val=0.03)
-        indeps.add_output('markup_warranty_management', units='USD', desc='Markup warranty management', val=0.0002)
-        indeps.add_output('markup_sales_and_use_tax', units='USD', desc='Markup sales and use tax', val=0)
-        indeps.add_output('markup_overhead', units='USD', desc='Markup overhead', val=0.05)
-        indeps.add_output('markup_profit_margin', units='USD', desc='Markup profit margin', val=0.05)
+        indeps.add_output('markup_contingency', desc='Markup contingency', val=0.03)
+        indeps.add_output('markup_warranty_management', desc='Markup warranty management', val=0.0002)
+        indeps.add_output('markup_sales_and_use_tax', desc='Markup sales and use tax', val=0)
+        indeps.add_output('markup_overhead', desc='Markup overhead', val=0.05)
+        indeps.add_output('markup_profit_margin', desc='Markup profit margin', val=0.05)
 
         # Discrete inputs like dataframes
         indeps.add_discrete_output('site_facility_building_area', val=None, desc='site_facility_building_area DataFrame')
