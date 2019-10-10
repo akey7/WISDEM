@@ -1,6 +1,7 @@
 import openmdao.api as om
 
 from .DummyComponent import DummyComponent
+from .ManagementCostComponent import ManagementComponent
 
 class LandBOSSEGroup(om.Group):
     def setup(self):
@@ -85,7 +86,12 @@ class LandBOSSEGroup(om.Group):
         indeps.add_output('markup_overhead', units='USD', desc='Markup overhead', val=0.05)
         indeps.add_output('markup_profit_margin', units='USD', desc='Markup profit margin', val=0.05)
 
-        self.add_subsystem('dummy', DummyComponent(), promotes=['*'])
+        # Discrete inputs like dataframes
+        indeps.add_discrete_output('site_facility_building_area', val=None, desc='site_facility_building_area DataFrame')
+
+        # self.add_subsystem('dummy', DummyComponent(), promotes=['*'])
+
+        self.add_subsystem('management_cost', ManagementComponent(), promotes=['*'])
 
 # Calculate this input instead
 # self.add_input('project_size_megawatts', units='MW', desc='(Number of turbines) * (Turbine rating MW)', value=)

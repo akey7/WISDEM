@@ -10,11 +10,13 @@ class ManagementComponent(om.ExplicitComponent):
         self.add_output('engineering_foundations_and_collections_sys', units='USD', val=1.0)
         self.add_output('site_security', units='USD', val=1.0)
         self.add_output('site_facility', units='USD', val=1.0)
-        self.add_output('markup_contingency', units='USD', val=1.0)
         self.add_output('management_total_cost', units='USD', val=1.0)
+        self.add_discrete_input('site_facility_building_area',
+                                val=None,
+                                desc='pd.DataFrame: Site facility building area.')
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
         outputs['management_total_cost'] = 200
         print('################################################')
-        print(f"Dummy {outputs['landbosse_foo']}")
+        print(f"management_total_cost {outputs['management_total_cost']}")
         print('################################################')

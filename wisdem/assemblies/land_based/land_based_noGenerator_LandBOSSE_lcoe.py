@@ -18,6 +18,7 @@ from wisdem.turbine_costsse.turbine_costsse_2015 import Turbine_CostsSE_2015
 from wisdem.plant_financese.plant_finance import PlantFinance
 from wisdem.drivetrainse.drivese_omdao import DriveSE
 from wisdem.landbosse.landbosse_omdao import LandBOSSEGroup
+from wisdem.landbosse.landbosse_omdao import DataframeCache
 
 from wisdem.commonse.mpi_tools import MPI
 
@@ -271,6 +272,13 @@ def Init_LandBasedAssembly(prob, blade, Nsection_Tow, Analysis_Level=0, fst_vt={
     prob['drive.gearbox_input_xcm'] = 0.1
     prob['drive.hss_input_length'] = 1.5
     prob['drive.yaw_motors_number'] = 1
+
+    # LansdBOSSE: Overrides for default inputs
+    site_facility_building_area = DataframeCache.read_xlsx_sheet(
+        'foundation_validation_ge15',
+        'foundation_validation_ge15'
+    )
+    prob['site_facility_building_area'] = site_facility_building_area
 
     return prob
 
