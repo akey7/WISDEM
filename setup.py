@@ -64,7 +64,7 @@ install_requires = [
 # Top-level setup
 setup(
     name             = 'WISDEM',
-    version          = '1.0.0',
+    version          = '2.0.1',
     description      = 'Wind-Plant Integrated System Design & Engineering Model',
     long_description =  'WISDEM is a Python package for conducting multidisciplinary analysis and optimization of wind turbines and plants',
     url              = 'https://github.com/WISDEM/WISDEM',
