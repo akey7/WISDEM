@@ -19,7 +19,7 @@ class LandBOSSEGroup(om.Group):
         indeps.add_output('hub_height_meters', units='m', desc='Hub height m', val=80)
         indeps.add_output('rotor_diameter_m', units='m', desc='Rotor diameter m', val=77)
         indeps.add_output('wind_shear_exponent', units='m', desc='Wind shear exponent', val=0.2)
-        indeps.add_output('turbine_rating_MW', units='m', desc='Turbine rating MW', val=1.5)
+        indeps.add_output('turbine_rating_MW', units='MW', desc='Turbine rating MW', val=1.5)
         indeps.add_output('breakpoint_between_base_and_topping_percent', units='m', desc='Breakpoint between base and topping (percent)', val=0.7)
         indeps.add_output('fuel_usd_per_gal', units='m', desc='Fuel cost USD per gal', val=1.5)
 

@@ -11,6 +11,7 @@ class ManagementComponent(om.ExplicitComponent):
         self.add_discrete_input('site_facility_building_area_df',
                                 val=None,
                                 desc='pd.DataFrame: Site facility building area.')
+        self.add_input('turbine_rating_MW', val=1.0, units='MW', desc='Turbine rating in MW')
         self.add_input('project_value_usd', val=1.0, units='USD', desc='Project value, USD')
         self.add_input('foundation_cost_usd', val=1.0, units='USD', desc='Foundation cost')
         self.add_input('construct_duration', val=1.0, desc='Construct duration in months')
