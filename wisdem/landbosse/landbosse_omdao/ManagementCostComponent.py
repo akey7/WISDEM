@@ -4,7 +4,7 @@ from wisdem.landbosse.model import ManagementCost
 
 class ManagementComponent(om.ExplicitComponent):
     def initialize(self):
-        self.options.declare('verbosity', default=False)
+        self.options.declare('verbosity', default=True)
 
     def setup(self):
         # Inputs
@@ -86,6 +86,6 @@ class ManagementComponent(om.ExplicitComponent):
         if self.options['verbosity']:
             print('################################################')
             print('LandBOSSE ManagementCost')
-            for key, value in master_outputs_dict.items():
-                print('{} = {%.2f}'.format(key, value))
+            for row in master_outputs_dict['management_cost_csv']:
+                print(f"{row['variable_df_key_col_name']}: {row['value']} {row['unit']}")
             print('################################################')
