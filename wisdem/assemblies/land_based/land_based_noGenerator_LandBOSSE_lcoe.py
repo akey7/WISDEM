@@ -4,6 +4,8 @@ from pprint import pprint
 from openmdao.api import IndepVarComp, ExplicitComponent, Group, Problem, ScipyOptimizeDriver, SqliteRecorder, \
     NonlinearRunOnce, DirectSolver
 
+import warnings
+
 try:
     from openmdao.api import pyOptSparseDriver
 except:
@@ -43,8 +45,13 @@ class LandBasedTurbine(Group):
         else:
             Analysis_Level = 0
 
-        # Define all input variables from all models
-        myIndeps = IndepVarComp()
+        # Define all input variables from all models.
+        # When the IndepVarComp() is made ignore the warning
+        # about adding multiple inputs at once.
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            myIndeps = IndepVarComp()
+
         myIndeps.add_discrete_output('crane', False)
 
         # Turbine Costs
