@@ -95,7 +95,7 @@ class LandBOSSEGroup(om.Group):
         indeps.add_output('markup_profit_margin', desc='Markup profit margin', val=0.05)
 
         # Discrete inputs like dataframes
-        indeps.add_discrete_output('site_facility_building_area', val=None, desc='site_facility_building_area DataFrame')
+        indeps.add_discrete_output('site_facility_building_area_df', val=None, desc='site_facility_building_area DataFrame')
 
         # self.add_subsystem('dummy', DummyComponent(), promotes=['*'])
 

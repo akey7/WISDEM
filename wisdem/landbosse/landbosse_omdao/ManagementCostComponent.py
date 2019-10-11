@@ -5,7 +5,7 @@ from wisdem.landbosse.model import ManagementCost
 class ManagementComponent(om.ExplicitComponent):
     def setup(self):
         # Inputs
-        self.add_discrete_input('site_facility_building_area',
+        self.add_discrete_input('site_facility_building_area_df',
                                 val=None,
                                 desc='pd.DataFrame: Site facility building area.')
         self.add_input('project_value_usd', val=1.0, units='USD', desc='Project value, USD')
@@ -18,6 +18,7 @@ class ManagementComponent(om.ExplicitComponent):
         self.add_input('num_access_roads', val=1.0, desc='Number of access roads')
         self.add_input('markup_contingency', val=1.0, desc='Markup contingency')
         self.add_input('markup_warranty_management', val=1.0, desc='Markup for warranty management')
+        self.add_input('markup_profit_margin', val=1.0, desc='Markup for warranty management')
         self.add_input('markup_sales_and_use_tax', val=1.0, desc='Markup for sales and use tax')
         self.add_input('markup_overhead', val=1.0, desc='markup_profit_margin')
 
@@ -45,8 +46,9 @@ class ManagementComponent(om.ExplicitComponent):
         Parameters
         ----------
         inputs : openmdao.vectors.default_vector.DefaultVector
-            A dictionary-like object with the float type numeric
-            inputs.
+            A dictionary-like object with NumPy arrays that hold float
+            inputs. Note that since these are NumPy arrays, they
+            need indexing to pull out simple float64 values.
 
         outputs : openmdao.vectors.default_vector.DefaultVector
             A dicitonary-like object to store outputs.
@@ -60,12 +62,13 @@ class ManagementComponent(om.ExplicitComponent):
             pandas.DataFrame)
         """
 
-        inputs_dict = {key: inputs[key] for key in inputs.keys()}
+        inputs_dict = {key: inputs[key][0] for key in inputs.keys()}
         discrete_inputs_dict = {key: value for key, value in discrete_inputs.items()}
-        print(inputs_dict)
-        print(discrete_inputs_dict)
-        print(type(discrete_outputs))
-        outputs['management_total_cost'] = 200
+        master_inputs_dict = {**inputs_dict, **discrete_inputs_dict}
+        master_outputs_dict = dict()
+        module = ManagementCost(master_inputs_dict, master_outputs_dict, 'WISDEM')
+        module.run_module()
+        print(master_outputs_dict)
         print('################################################')
         print(f"management_total_cost {outputs['management_total_cost']}")
         print('################################################')

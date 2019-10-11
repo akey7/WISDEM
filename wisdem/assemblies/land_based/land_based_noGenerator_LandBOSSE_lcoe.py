@@ -274,11 +274,11 @@ def Init_LandBasedAssembly(prob, blade, Nsection_Tow, Analysis_Level=0, fst_vt={
     prob['drive.yaw_motors_number'] = 1
 
     # LansdBOSSE: Overrides for default inputs
-    site_facility_building_area = DataframeCache.read_xlsx_sheet(
+    site_facility_building_area_df = DataframeCache.read_xlsx_sheet(
         'foundation_validation_ge15',
         'foundation_validation_ge15'
     )
-    prob['site_facility_building_area'] = site_facility_building_area
+    prob['site_facility_building_area_df'] = site_facility_building_area_df
 
     return prob
 
