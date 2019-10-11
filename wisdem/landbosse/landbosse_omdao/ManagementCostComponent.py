@@ -85,8 +85,17 @@ class ManagementComponent(om.ExplicitComponent):
 
         # Log the outputs if needed
         if self.options['verbosity']:
-            print('################################################')
-            print('LandBOSSE ManagementCost')
-            for row in master_outputs_dict['management_cost_csv']:
-                print(f"{row['variable_df_key_col_name']}: {row['value']} {row['unit']}")
-            print('################################################')
+            self.print_verbose_module_type_operation('ManagementCost',
+                                                     master_outputs_dict['mangement_module_type_operation'])
+
+    def print_verbose_module_type_operation(self, module_name, module_type_operation):
+        print('################################################')
+        print(f'LandBOSSE {module_name}')
+        for row in module_type_operation:
+            operation_id = row['operation_id']
+            type_of_cost = row['type_of_cost']
+            cost_per_turbine = round(row['cost_per_turbine'], 2)
+            cost_per_project = round(row['cost_per_project'], 2)
+            usd_per_kw = round(row['usd_per_kw_per_project'], 2)
+            print(f'{operation_id}\t{type_of_cost}\t${cost_per_turbine}/turbine\t${cost_per_project}/project\t${usd_per_kw}/kW')
+        print('################################################')
