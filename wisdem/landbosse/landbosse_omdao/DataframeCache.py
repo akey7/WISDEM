@@ -64,9 +64,6 @@ class DataframeCache:
         xlsx_dir = os.environ.get('LANDBOSSE_PROJECT_DATA_DIR', 'landbosse_project_data')
         xlsx_path = os.path.join(xlsx_dir, f'{xlsx_name}.xlsx')
 
-        # TODO: Raise a descriptive exception if the file is not found.
-        # TODO: Raise a dscriptive exception if the tab name is not found.
-
         # If the tab has already been read, just return the DataFrame
         if xlsx_name in cls._cache and sheet_name in cls._cache[xlsx_name]:
             return cls._cache[xlsx_name][sheet_name]
