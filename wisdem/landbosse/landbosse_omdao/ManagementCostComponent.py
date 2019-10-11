@@ -35,8 +35,8 @@ class ManagementComponent(om.ExplicitComponent):
         self.add_output('total_management_cost', units='USD', val=1.0)
         self.add_output('markup_contingency_usd', units='USD', val=1.0)
         self.add_output('engineering_usd', units='USD', val=1.0)
-        # self.add_discrete_output('management_cost_details', val=None, desc='Itemization of managements costs')
-        # self.add_discrete_output('management_cost')
+        self.add_discrete_output('management_cost_details', val=None, desc='Management cost details')
+        self.add_discrete_output('management_module_type_operation', val=None, desc='Itemization of management costs')
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
         """
@@ -75,13 +75,13 @@ class ManagementComponent(om.ExplicitComponent):
         module = ManagementCost(master_inputs_dict, master_outputs_dict, 'WISDEM')
         module.run_module()
 
-        # There are no discrete outputs from this module, so we can just
-        # do a simple copy. Note that outputs data structure already
-        # holds the keys it needs, so this is iterating over the OUTPUT's
-        # keys it needs.
-
+        # Copy the numeric outputs into the outputs object
         for key in outputs.keys():
             outputs[key] = master_outputs_dict[key]
+
+        # Copy the discrete outputs into their object
+        discrete_outputs['management_cost_details'] = master_outputs_dict['management_cost_csv']
+        discrete_outputs['management_module_type_operation'] = master_outputs_dict['mangement_module_type_operation']
 
         # Log the outputs if needed
         if self.options['verbosity']:
