@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings('ignore', 'numpy.ufunc size changed')
+
 import traceback
 import math
 

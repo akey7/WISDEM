@@ -32,14 +32,39 @@ class ManagementComponent(om.ExplicitComponent):
         self.add_output('management_total_cost', units='USD', val=1.0)
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
-        # Note: inputs, outputs, discrete_inputs and discrete_outputs are not dictionaries
-        # though they are accessible with [] brackets and have a keys() method.
-        management_cost_continuous_input_dict = {str(key): inputs[str(key)] for key in inputs.keys()}
-        management_cost_discrete_input_dict = {key: discrete_inputs[key] for key in discrete_inputs.keys()}
-        management_cost_input_dict = {**management_cost_continuous_input_dict, **management_cost_discrete_input_dict}
-        management_cost_output_dict = dict()
-        project_name = 'WISDEM LandBOSSE'
-        management_cost = ManagementCost(management_cost_input_dict, management_cost_output_dict, project_name)
+        """
+        Note: inputs, discrete_inputs are not dictionaries. They do support
+        [] notation. inputs is of class 'openmdao.vectors.default_vector.DefaultVector'
+        discrete_inputs is of class openmdao.core.component._DictValues. Other than
+        [] brackets, they do not behave like dictionaries. See the following
+        documentation for details.
+
+        http://openmdao.org/twodocs/versions/latest/_srcdocs/packages/vectors/default_vector.html
+        https://mdolab.github.io/OpenAeroStruct/_modules/openmdao/core/component.html
+
+        Parameters
+        ----------
+        inputs : openmdao.vectors.default_vector.DefaultVector
+            A dictionary-like object with the float type numeric
+            inputs.
+
+        outputs : openmdao.vectors.default_vector.DefaultVector
+            A dicitonary-like object to store outputs.
+
+        discrete_inputs : openmdao.core.component._DictValues
+            A dictionary-like with the non-numeric inputs (like
+            pandas.DataFrame)
+
+        discrete_outputs : openmdao.core.component._DictValues
+            A dictionary-like for non-numeric outputs (like
+            pandas.DataFrame)
+        """
+
+        inputs_dict = {key: inputs[key] for key in inputs.keys()}
+        discrete_inputs_dict = {key: value for key, value in discrete_inputs.items()}
+        print(inputs_dict)
+        print(discrete_inputs_dict)
+        print(type(discrete_outputs))
         outputs['management_total_cost'] = 200
         print('################################################')
         print(f"management_total_cost {outputs['management_total_cost']}")
