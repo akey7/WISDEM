@@ -19,6 +19,10 @@ from wisdem.commonse.turbine_constraints import TurbineConstraints
 from wisdem.turbine_costsse.turbine_costsse_2015 import Turbine_CostsSE_2015
 from wisdem.plant_financese.plant_finance import PlantFinance
 from wisdem.drivetrainse.drivese_omdao import DriveSE
+
+# Suppress the NumPy warning about incompatability. It is a false
+# positive.
+warnings.filterwarnings('ignore', 'numpy.ufunc size changed')
 from wisdem.landbosse.landbosse_omdao import LandBOSSEGroup
 from wisdem.landbosse.landbosse_omdao import DataframeCache
 
