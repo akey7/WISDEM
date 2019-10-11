@@ -276,7 +276,7 @@ def Init_LandBasedAssembly(prob, blade, Nsection_Tow, Analysis_Level=0, fst_vt={
     # LansdBOSSE: Overrides for default inputs
     site_facility_building_area_df = DataframeCache.read_xlsx_sheet(
         'foundation_validation_ge15',
-        'foundation_validation_ge15'
+        'site_facility_building_area'
     )
     prob['site_facility_building_area_df'] = site_facility_building_area_df
 
