@@ -26,14 +26,16 @@ class ManagementComponent(om.ExplicitComponent):
         self.add_input('markup_overhead', val=1.0, desc='markup_profit_margin')
 
         # Outputs
-        self.add_output('insurance', units='USD', desc='Insurance cost', val=1.0)
-        self.add_output('construction_permitting', units='USD', desc='Construction permitting', val=1.0)
-        self.add_output('project_management', units='USD', desc='Project management', val=1.0)
-        self.add_output('bonding', units='USD', desc='bonding', val=1.0)
-        self.add_output('engineering_foundations_and_collections_sys', units='USD', val=1.0)
-        self.add_output('site_security', units='USD', val=1.0)
-        self.add_output('site_facility', units='USD', val=1.0)
-        self.add_output('management_total_cost', units='USD', val=1.0)
+        self.add_output('insurance_usd', units='USD', desc='Insurance cost', val=1.0)
+        self.add_output('construction_permitting_usd', units='USD', desc='Construction permitting', val=1.0)
+        self.add_output('project_management_usd', units='USD', desc='Project management', val=1.0)
+        self.add_output('bonding_usd', units='USD', desc='bonding', val=1.0)
+        self.add_output('site_facility_usd', units='USD', val=1.0)
+        self.add_output('total_management_cost', units='USD', val=1.0)
+        self.add_output('markup_contingency_usd', units='USD', val=1.0)
+        self.add_output('engineering_usd', units='USD', val=1.0)
+        # self.add_discrete_output('management_cost_details', val=None, desc='Itemization of managements costs')
+        # self.add_discrete_output('management_cost')
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
         """
@@ -73,13 +75,17 @@ class ManagementComponent(om.ExplicitComponent):
         module.run_module()
 
         # There are no discrete outputs from this module, so we can just
-        # do a simple copy.
-        for key, value in master_outputs_dict:
-            outputs[key] = value
+        # do a simple copy. Note that outputs data structure already
+        # holds the keys it needs, so this is iterating over the OUTPUT's
+        # keys it needs.
+
+        for key in outputs.keys():
+            outputs[key] = master_outputs_dict[key]
 
         # Log the outputs if needed
         if self.options['verbosity']:
             print('################################################')
             print('LandBOSSE ManagementCost')
-            print(f"management_total_cost {outputs['management_total_cost']}")
+            for key, value in master_outputs_dict.items():
+                print('{} = {%.2f}'.format(key, value))
             print('################################################')
