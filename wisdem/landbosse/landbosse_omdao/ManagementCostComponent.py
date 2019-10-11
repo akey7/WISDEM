@@ -3,6 +3,9 @@ from wisdem.landbosse.model import ManagementCost
 
 
 class ManagementComponent(om.ExplicitComponent):
+    def initialize(self):
+        self.options.declare('verbosity', default=False)
+
     def setup(self):
         # Inputs
         self.add_discrete_input('site_facility_building_area_df',
@@ -61,14 +64,22 @@ class ManagementComponent(om.ExplicitComponent):
             A dictionary-like for non-numeric outputs (like
             pandas.DataFrame)
         """
-
+        # Create real dictionaries to pass to the module
         inputs_dict = {key: inputs[key][0] for key in inputs.keys()}
         discrete_inputs_dict = {key: value for key, value in discrete_inputs.items()}
         master_inputs_dict = {**inputs_dict, **discrete_inputs_dict}
         master_outputs_dict = dict()
         module = ManagementCost(master_inputs_dict, master_outputs_dict, 'WISDEM')
         module.run_module()
-        print(master_outputs_dict)
-        print('################################################')
-        print(f"management_total_cost {outputs['management_total_cost']}")
-        print('################################################')
+
+        # There are no discrete outputs from this module, so we can just
+        # do a simple copy.
+        for key, value in master_outputs_dict:
+            outputs[key] = value
+
+        # Log the outputs if needed
+        if self.options['verbosity']:
+            print('################################################')
+            print('LandBOSSE ManagementCost')
+            print(f"management_total_cost {outputs['management_total_cost']}")
+            print('################################################')
