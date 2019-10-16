@@ -2,8 +2,17 @@ import openmdao.api as om
 from wisdem.landbosse.model import ManagementCost
 
 
-class ManagementComponent(om.ExplicitComponent):
+class ManagementCostComponent(om.ExplicitComponent):
+    """
+    This is an OpenMDAO wrapper around the ManagementCost component
+    """
+
     def initialize(self):
+        """
+        There is one option for this component: verbosity. If verbosity is
+        True, then the component prints the costs to standard output
+        when it calculates them
+        """
         self.options.declare('verbosity', default=True)
 
     def setup(self):
