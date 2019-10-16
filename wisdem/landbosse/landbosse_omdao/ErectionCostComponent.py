@@ -38,5 +38,31 @@ class ErectionCostComopnent(LandBOSSEComponent):
                                 desc="Dictionary of normal and long hours for construction in a day in the form of {'long': 24, 'normal': 10}")
 
         # Outputs, continuous
+        self.add_output('erection_wind_mult', val=1.0, desc='Wind multiplier for erection operations')
+        self.add_output('total_cost_summed_erection', val=1.0, units='usd', desc='Sum of all erection costs')
 
-        # Outputs, discrete
+        # Outputs, discrete, non dataframes
+        self.add_discrete_output('erection_module_type_operation',
+                                 desc='List of dictionaries with costs by module, type and operation')
+        self.add_discrete_output('erection_cost_csv', desc='List of dictionaries with details about erection costs')
+
+        # Outputs, discrete, dataframes
+        self.add_discrete_output('total_erection_cost', desc='Dataframe of total erection costs')
+        self.add_discrete_output('crane_data_output', desc='Costs and times for each crane-boom-operation combination')
+        self.add_discrete_output('crane_cost_details', desc='Costs for each crane-boom-operation')
+        self.add_discrete_output('management_crews_cost', desc='Costs for each type of labor of each management crew')
+        self.add_discrete_output('management_crews_cost_grouped',
+                                 desc='Costs for labor grouped by management crew type')
+        self.add_discrete_output('component_name_topvbase',
+                                 desc='Dataframe with eac component and whether that component is a topping or a base operation.')
+        self.add_discrete_output('possible_cranes',
+                                 desc='Dataframe of all cranes/booms capable of lifting all components during a particular operation.')
+        self.add_discrete_output('crane_specs_with_offload',
+                                 desc='Operation times for each possible base or topping crane')
+        self.add_discrete_output('separate_topbase_crane_cost',
+                                 desc='Dataframe of crane costs where base and topping are separate operations')
+        self.add_discrete_output('topbase_same_crane_cost',
+                                 desc='Dataframe of crane costs where Base+Top is one operation')
+
+        # This output is particularly important.
+        self.add_discrete_output('crane_choice', desc='The cranes ultimately selected for offload, base and top.')
