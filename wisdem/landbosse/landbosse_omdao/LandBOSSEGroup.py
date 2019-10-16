@@ -1,7 +1,7 @@
 import openmdao.api as om
 
 from .DummyComponent import DummyComponent
-from .ManagementCostComponent import ManagementComponent
+from .ManagementCostComponent import ManagementCostComponent
 
 class LandBOSSEGroup(om.Group):
     def initialize(self):
@@ -99,7 +99,7 @@ class LandBOSSEGroup(om.Group):
 
         # self.add_subsystem('dummy', DummyComponent(), promotes=['*'])
 
-        self.add_subsystem('management_cost', ManagementComponent(), promotes=['*'])
+        self.add_subsystem('management_cost', ManagementCostComponent(), promotes=['*'])
 
 # Calculate this input instead
 # self.add_input('project_size_megawatts', units='MW', desc='(Number of turbines) * (Turbine rating MW)', value=)
