@@ -57,7 +57,7 @@ class ManagementComponent(om.ExplicitComponent):
             need indexing to pull out simple float64 values.
 
         outputs : openmdao.vectors.default_vector.DefaultVector
-            A dicitonary-like object to store outputs.
+            A dictionary-like object to store outputs.
 
         discrete_inputs : openmdao.core.component._DictValues
             A dictionary-like with the non-numeric inputs (like

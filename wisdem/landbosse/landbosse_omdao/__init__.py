@@ -1,2 +1,2 @@
-from .landbosse_group import LandBOSSEGroup
+from .LandBOSSEGroup import LandBOSSEGroup
 from .DataframeCache import DataframeCache
