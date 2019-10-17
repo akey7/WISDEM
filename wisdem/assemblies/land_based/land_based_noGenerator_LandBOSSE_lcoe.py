@@ -292,7 +292,6 @@ def Init_LandBasedAssembly(prob, blade, Nsection_Tow, Analysis_Level=0, fst_vt={
     prob['site_facility_building_area_df'] = site_facility_building_area_df
     prob['project_value_usd'] = 5e7
     prob['foundation_cost_usd'] = 1e7
-    prob['num_turbines'] = 100
 
     return prob
 
