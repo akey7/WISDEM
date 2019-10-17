@@ -84,7 +84,13 @@ class LandBOSSEGroup(om.Group):
         indeps.add_output(
             'allow_same_flag',
             desc='Allow same crane for base and topping (True or False)',
-            val=False
+            val=True
+        )
+
+        indeps.add_discrete_output(
+            'hour_day',
+            desc="Dictionary of normal and long hours for construction in a day in the form of {'long': 24, 'normal': 10}",
+            val={'long': 24, 'normal': 10}
         )
 
         # Dropping the column 'Override total management cost for distributed (0 does not override)'
@@ -97,8 +103,11 @@ class LandBOSSEGroup(om.Group):
 
         # Discrete inputs like dataframes
         indeps.add_discrete_output('site_facility_building_area_df', val=None, desc='site_facility_building_area DataFrame')
-
-        # self.add_subsystem('dummy', DummyComponent(), promotes=['*'])
+        indeps.add_discrete_output('components', val=None, desc='Dataframe of components for tower, blade, nacelle')
+        indeps.add_discrete_output('crane_specs', val=None, desc='Dataframe of specifications of cranes')
+        indeps.add_discrete_output('weather_window', val=None, desc='Dataframe of wind toolkit data')
+        indeps.add_discrete_output('crew', val=None, desc='Dataframe of crew configurations')
+        indeps.add_discrete_output('crew_price', val=None, desc='Dataframe of costs per hour for each type of worker.')
 
         self.add_subsystem('management_cost', ManagementCostComponent(), promotes=['*'])
 

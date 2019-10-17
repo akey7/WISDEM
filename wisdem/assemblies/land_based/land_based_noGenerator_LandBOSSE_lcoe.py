@@ -25,6 +25,7 @@ from wisdem.drivetrainse.drivese_omdao import DriveSE
 warnings.filterwarnings('ignore', 'numpy.ufunc size changed')
 from wisdem.landbosse.landbosse_omdao import LandBOSSEGroup
 from wisdem.landbosse.landbosse_omdao import DataframeCache
+from wisdem.landbosse.excelio.WeatherWindowCSVReader import read_weather_window
 
 from wisdem.commonse.mpi_tools import MPI
 
@@ -290,6 +291,40 @@ def Init_LandBasedAssembly(prob, blade, Nsection_Tow, Analysis_Level=0, fst_vt={
         'site_facility_building_area'
     )
     prob['site_facility_building_area_df'] = site_facility_building_area_df
+
+    # This is the components dataframe that will need to be populated from
+    # the rest of this assembly.
+    components_df = DataframeCache.read_xlsx_sheet(
+        'foundation_validation_ge15',
+        'components'
+    )
+    prob['components'] = components_df
+
+    crane_specs_df = DataframeCache.read_xlsx_sheet(
+        'foundation_validation_ge15',
+        'crane_specs'
+    )
+    prob['crane_specs'] = crane_specs_df
+
+    raw_weather_window_df = DataframeCache.read_xlsx_sheet(
+        'foundation_validation_ge15',
+        'weather_window'
+    )
+    weather_window_df = read_weather_window(raw_weather_window_df)
+    prob['weather_window'] = weather_window_df
+
+    crew_df = DataframeCache.read_xlsx_sheet(
+        'foundation_validation_ge15',
+        'crew'
+    )
+    prob['crew'] = crew_df
+
+    crew_price_df = DataframeCache.read_xlsx_sheet(
+        'foundation_validation_ge15',
+        'crew_price'
+    )
+    prob['crew_price'] = crew_price_df
+
     prob['project_value_usd'] = 5e7
     prob['foundation_cost_usd'] = 1e7
 
