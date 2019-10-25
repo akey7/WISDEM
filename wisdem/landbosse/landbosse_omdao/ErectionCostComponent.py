@@ -13,62 +13,106 @@ class ErectionCostComopnent(LandBOSSEComponent):
         self.add_input('rotor_diameter_m', val=1.0, units='m', desc='Rotor diameter in m')
         self.add_input('overtime_multiplier', val=1.0, desc='Multiplier for overtime labor rates')
         self.add_input('fuel_cost_usd_per_gal', val=1.0, desc='Fuel cost USD/gal')
+        self.add_input('construct_duration', val=9, desc='Total project construction time (months)')
+        self.add_input('wind_shear_exponent', val=0.2, units='m', desc='Wind shear exponent')
+        self.add_input('turbine_rating_MW', val=1.5, units='MW', desc='Turbine rating MW')
 
         self.add_input('turbine_spacing_rotor_diameters',
                        val=1.0,
-                       units='m',
                        desc='Turbine spacing in rotor diameters')
 
         self.add_input('operational_construction_time',
                        val=1.0,
-                       units='hours',
+                       units='h',
                        desc='Number of hours each day for construction.')
-        #
+
+        self.add_input('breakpoint_between_base_and_topping_percent',
+                        val=70,
+                        desc='Breakpoint between base and topping (percent)')
+
+        self.add_input('rate_of_deliveries', val=10, desc='Rate of deliveries (turbines per week)')
+
         # Inputs, discrete, dataframes
-        self.add_discrete_input('components', desc='Dataframe of components for tower, blade, nacelle')
-        self.add_discrete_input('crane_specs', desc='Dataframe of specifications of cranes')
-        self.add_discrete_input('weather_window', desc='Dataframe of wind toolkit data')
-        self.add_discrete_input('crew', desc='Dataframe of crew configurations')
-        self.add_discrete_input('crew_price', desc='Dataframe of costs per hour for each type of worker.')
-        #
-        # # Inputs, discrete, non dataframes
+        self.add_discrete_input('components', val=None, desc='Dataframe of components for tower, blade, nacelle')
+        self.add_discrete_input('crane_specs', val=None, desc='Dataframe of specifications of cranes')
+        self.add_discrete_input('weather_window', val=None, desc='Dataframe of wind toolkit data')
+        self.add_discrete_input('crew', val=None, desc='Dataframe of crew configurations')
+        self.add_discrete_input('crew_price', val=None, desc='Dataframe of costs per hour for each type of worker.')
+        self.add_discrete_input('equip', val=None, desc='Collections of equipment to perform erection operations.')
+        self.add_discrete_input('equip_price', val=None, desc='Prices for various type of equipment.')
+
+        # Inputs, discrete, non dataframes
         self.add_discrete_input('allow_same_flag',
+                                val=True,
                                 desc='True if the same crane can be used for base and topping, False otherwise')
-        self.add_discrete_input('hour_day',
-                                desc="Dictionary of normal and long hours for construction in a day in the form of {'long': 24, 'normal': 10}")
+
+        self.add_discrete_input(
+            'hour_day',
+            val={'long': 24, 'normal': 10},
+            desc="Dictionary of normal and long hours for construction in a day in the form of {'long': 24, 'normal': 10}"
+        )
+
+        self.add_discrete_input(
+            'time_construct',
+            desc='One of the keys in the hour_day dictionary to specify how many hours per day construction happens.',
+            val='normal'
+        )
 
         # Outputs, continuous
-        self.add_output('erection_wind_mult', val=1.0, desc='Wind multiplier for erection operations')
-        self.add_output('total_cost_summed_erection', val=1.0, units='usd', desc='Sum of all erection costs')
+        # self.add_output('erection_wind_mult', val=1.0, desc='Wind multiplier for erection operations')
+        # self.add_output('total_cost_summed_erection', val=1.0, desc='Sum of all erection costs')
 
         # Outputs, discrete, non dataframes
         self.add_discrete_output('erection_module_type_operation',
+                                 val=[],
                                  desc='List of dictionaries with costs by module, type and operation')
-        self.add_discrete_output('erection_cost_csv', desc='List of dictionaries with details about erection costs')
+
+        self.add_discrete_output('erection_cost_details',
+                                 val=[],
+                                 desc='List of dictionaries with details about erection costs')
+
+        # discrete_outputs['erection_cost_details'] = master_outputs_dict['erection_cost_csv']
+        # discrete_outputs['erection_module_type_operation'] = master_outputs_dict['erection_module_type_operation']
 
         # Outputs, discrete, dataframes
-        self.add_discrete_output('total_erection_cost', desc='Dataframe of total erection costs')
-        self.add_discrete_output('crane_data_output', desc='Costs and times for each crane-boom-operation combination')
-        self.add_discrete_output('crane_cost_details', desc='Costs for each crane-boom-operation')
-        self.add_discrete_output('management_crews_cost', desc='Costs for each type of labor of each management crew')
+        self.add_discrete_output('total_erection_cost', val=None, desc='Dataframe of total erection costs')
+        self.add_discrete_output('crane_data_output', val=None, desc='Costs and times for each crane-boom-operation combination')
+        self.add_discrete_output('crane_cost_details', val=None, desc='Costs for each crane-boom-operation')
+        self.add_discrete_output('management_crews_cost', val=None, desc='Costs for each type of labor of each management crew')
+
         self.add_discrete_output('management_crews_cost_grouped',
+                                 val=None,
                                  desc='Costs for labor grouped by management crew type')
+
         self.add_discrete_output('component_name_topvbase',
+                                 val=None,
                                  desc='Dataframe with eac component and whether that component is a topping or a base operation.')
+
         self.add_discrete_output('possible_cranes',
+                                 val=None,
                                  desc='Dataframe of all cranes/booms capable of lifting all components during a particular operation.')
+
         self.add_discrete_output('crane_specs_with_offload',
+                                 val=None,
                                  desc='Operation times for each possible base or topping crane')
+
         self.add_discrete_output('separate_topbase_crane_cost',
+                                 val=None,
                                  desc='Dataframe of crane costs where base and topping are separate operations')
+
         self.add_discrete_output('topbase_same_crane_cost',
+                                 val=None,
                                  desc='Dataframe of crane costs where Base+Top is one operation')
 
-        # This output is particularly important.
-        self.add_discrete_output('crane_choice', desc='The cranes ultimately selected for offload, base and top.')
+        self.add_discrete_output('crane_choice',
+                                 val=None,
+                                 desc='The cranes ultimately selected for offload, base and top.')
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
         """
+        This runs the ErectionCost module using the inputs and outputs into and
+        out of this module.
+
         Note: inputs, discrete_inputs are not dictionaries. They do support
         [] notation. inputs is of class 'openmdao.vectors.default_vector.DefaultVector'
         discrete_inputs is of class openmdao.core.component._DictValues. Other than
@@ -101,6 +145,24 @@ class ErectionCostComopnent(LandBOSSEComponent):
         discrete_inputs_dict = {key: value for key, value in discrete_inputs.items()}
         master_inputs_dict = {**inputs_dict, **discrete_inputs_dict}
         master_outputs_dict = dict()
+
+        # Breakpoint between base and topping is called a percentage but
+        # it should be between 0 and 1. Make that conversion here.
+        x = inputs['breakpoint_between_base_and_topping_percent'] / 100
+        master_inputs_dict['breakpoint_between_base_and_topping_percent'] = x
+
+        # Put the project data DataFrames where they should go.
+        project_data = dict()
+        project_data['components'] = discrete_inputs['components']
+        project_data['crane_specs'] = discrete_inputs['crane_specs']
+        project_data['weather_window'] = discrete_inputs['weather_window']
+        project_data['crew'] = discrete_inputs['crew']
+        project_data['crew_price'] = discrete_inputs['crew_price']
+        project_data['equip'] = discrete_inputs['equip']
+        project_data['equip_price'] = discrete_inputs['equip_price']
+        master_inputs_dict['project_data'] = project_data
+
+        # Run the module
         module = ErectionCost(master_inputs_dict, master_outputs_dict, 'WISDEM')
         module.run_module()
 
@@ -115,4 +177,4 @@ class ErectionCostComopnent(LandBOSSEComponent):
         # Log the outputs if needed
         if self.options['verbosity']:
             self.print_verbose_module_type_operation('ErectionCost',
-                                                     master_outputs_dict['mangement_module_type_operation'])
+                                                     master_outputs_dict['erection_module_type_operation'])

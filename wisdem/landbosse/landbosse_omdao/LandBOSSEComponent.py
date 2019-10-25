@@ -14,3 +14,27 @@ class LandBOSSEComponent(om.ExplicitComponent):
         with print() after it finishes calculating them.
         """
         self.options.declare('verbosity', default=True)
+
+    def print_verbose_module_type_operation(self, module_name, module_type_operation):
+        """
+        This method prints the module_type_operation costs list for
+        verbose output.
+
+        Parameters
+        ----------
+        module_name : str
+            The name of the LandBOSSE module being logged.
+
+        module_type_operation : list
+            The list of dictionaries of costs to print.
+        """
+        print('################################################')
+        print(f'LandBOSSE {module_name}')
+        for row in module_type_operation:
+            operation_id = row['operation_id']
+            type_of_cost = row['type_of_cost']
+            cost_per_turbine = round(row['cost_per_turbine'], 2)
+            cost_per_project = round(row['cost_per_project'], 2)
+            usd_per_kw = round(row['usd_per_kw_per_project'], 2)
+            print(f'{operation_id}\t{type_of_cost}\t${cost_per_turbine}/turbine\t${cost_per_project}/project\t${usd_per_kw}/kW')
+        print('################################################')

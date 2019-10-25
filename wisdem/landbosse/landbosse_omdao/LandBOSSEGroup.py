@@ -2,6 +2,7 @@ import openmdao.api as om
 
 from .DummyComponent import DummyComponent
 from .ManagementCostComponent import ManagementCostComponent
+from .ErectionCostComponent import ErectionCostComopnent
 
 class LandBOSSEGroup(om.Group):
     def initialize(self):
@@ -15,18 +16,20 @@ class LandBOSSEGroup(om.Group):
 
         # Numeric inputs
         indeps = self.add_subsystem('indeps', om.IndepVarComp(), promotes=['*'])
-        indeps.add_output('construct_duration', desc='Total project construction time (months)', val=9)
-        indeps.add_output('hub_height_meters', units='m', desc='Hub height m', val=80)
-        indeps.add_output('rotor_diameter_m', units='m', desc='Rotor diameter m', val=77)
-        indeps.add_output('wind_shear_exponent', units='m', desc='Wind shear exponent', val=0.2)
-        indeps.add_output('turbine_rating_MW', units='MW', desc='Turbine rating MW', val=1.5)
+        indeps.add_output('construct_duration', val=9, desc='Total project construction time (months)')
+        indeps.add_output('hub_height_meters', val=80, units='m', desc='Hub height m')
+        indeps.add_output('rotor_diameter_m', val=77, units='m', desc='Rotor diameter m')
+        indeps.add_output('wind_shear_exponent', val=0.2, units='m', desc='Wind shear exponent')
+        indeps.add_output('turbine_rating_MW', val=1.5, units='MW', desc='Turbine rating MW')
         indeps.add_output('num_turbines', val=100, desc='Number of turbines in project')
-        indeps.add_output('breakpoint_between_base_and_topping_percent', units='m', desc='Breakpoint between base and topping (percent)', val=0.7)
         indeps.add_output('fuel_cost_usd_per_gal', val=1.0, desc='Fuel cost USD/gal')
 
+        indeps.add_output('breakpoint_between_base_and_topping_percent',
+                          val=70,
+                          desc='Breakpoint between base and topping (percent)')
+
         # Could not place units in rate_of_deliveries
-        # indeps.add_output('rate_of_deliveries', units='turb/wk', desc='Rate of deliveries (turbines per week)', val=10)
-        indeps.add_output('rate_of_deliveries', desc='Rate of deliveries (turbines per week)', val=10)
+        indeps.add_output('rate_of_deliveries', val=10, desc='Rate of deliveries (turbines per week)')
 
         # Could not place units in turbine_spacing_rotor_diameters
         # indeps.add_output('turbine_spacing_rotor_diameters', units='rotor diameters', desc='Turbine spacing (times rotor diameter)', val=4)
@@ -51,7 +54,6 @@ class LandBOSSEGroup(om.Group):
         indeps.add_output('line_frequency_hz', units='Hz', desc='Line Frequency (Hz)', val=60)
 
         # Can't set units
-        # indeps.add_output('row_spacing_rotor_diameters', units='row_spacing_rotor_diameters', desc='Row spacing (times rotor diameter)', val=4)
         indeps.add_output('row_spacing_rotor_diameters',
                           desc='Row spacing (times rotor diameter)', val=4)
 
@@ -81,18 +83,6 @@ class LandBOSSEGroup(om.Group):
         indeps.add_output('num_access_roads', desc='Number of access roads', val=2)
         indeps.add_output('overtime_multiplier', desc='Overtime multiplier', val=1.4)
 
-        indeps.add_output(
-            'allow_same_flag',
-            desc='Allow same crane for base and topping (True or False)',
-            val=True
-        )
-
-        indeps.add_discrete_output(
-            'hour_day',
-            desc="Dictionary of normal and long hours for construction in a day in the form of {'long': 24, 'normal': 10}",
-            val={'long': 24, 'normal': 10}
-        )
-
         # Dropping the column 'Override total management cost for distributed (0 does not override)'
 
         indeps.add_output('markup_contingency', desc='Markup contingency', val=0.03)
@@ -108,8 +98,29 @@ class LandBOSSEGroup(om.Group):
         indeps.add_discrete_output('weather_window', val=None, desc='Dataframe of wind toolkit data')
         indeps.add_discrete_output('crew', val=None, desc='Dataframe of crew configurations')
         indeps.add_discrete_output('crew_price', val=None, desc='Dataframe of costs per hour for each type of worker.')
+        indeps.add_discrete_output('equip', val=None, desc='Collections of equipment to perform erection operations.')
+        indeps.add_discrete_output('equip_price', val=None, desc='Prices for various type of equipment.')
+
+        indeps.add_discrete_output(
+            'allow_same_flag',
+            val=True,
+            desc='Allow same crane for base and topping (True or False)',
+        )
+
+        indeps.add_discrete_output(
+            'hour_day',
+            desc="Dictionary of normal and long hours for construction in a day in the form of {'long': 24, 'normal': 10}",
+            val={'long': 24, 'normal': 10}
+        )
+
+        indeps.add_discrete_output(
+            'time_construct',
+            desc='One of the keys in the hour_day dictionary to specify how many hours per day construction happens.',
+            val='normal'
+        )
 
         self.add_subsystem('management_cost', ManagementCostComponent(), promotes=['*'])
+        self.add_subsystem('erection_cost', ErectionCostComopnent(), promotes=['*'])
 
 # Calculate this input instead
 # self.add_input('project_size_megawatts', units='MW', desc='(Number of turbines) * (Turbine rating MW)', value=)
