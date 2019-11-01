@@ -1,4 +1,4 @@
-from .LandBOSSEComponent import LandBOSSEComponent
+from .LandBOSSEParentComponent import LandBOSSEComponent
 from wisdem.landbosse.model import ErectionCost
 
 class ErectionCostComopnent(LandBOSSEComponent):

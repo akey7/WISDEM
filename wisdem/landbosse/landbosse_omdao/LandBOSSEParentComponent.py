@@ -5,6 +5,8 @@ class LandBOSSEComponent(om.ExplicitComponent):
     This is a superclass for all the components that wrap LandBOSSE
     cost modules. It holds functionality used for the other components
     that wrap LandBOSSE cost modules.
+
+    This component should not be instantiated directly.
     """
 
     def initialize(self):
