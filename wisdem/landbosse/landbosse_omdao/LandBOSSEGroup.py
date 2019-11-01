@@ -103,7 +103,7 @@ class LandBOSSEGroup(om.Group):
 
         indeps.add_discrete_output(
             'allow_same_flag',
-            val=True,
+            val=False,
             desc='Allow same crane for base and topping (True or False)',
         )
 

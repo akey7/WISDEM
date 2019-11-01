@@ -43,7 +43,7 @@ class ErectionCostComopnent(LandBOSSEComponent):
 
         # Inputs, discrete, non dataframes
         self.add_discrete_input('allow_same_flag',
-                                val=True,
+                                val=False,
                                 desc='True if the same crane can be used for base and topping, False otherwise')
 
         self.add_discrete_input(
