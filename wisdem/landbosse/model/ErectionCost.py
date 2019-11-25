@@ -227,6 +227,39 @@ class ErectionCost(CostModule):
                 'last_number': row[2]
             })
 
+        for _, row in self.output_dict['erection_selected_detailed_data'].iterrows():
+            value = row['Labor cost USD']
+            operation = row['Operation']
+            result.append({
+                'unit': 'usd',
+                'type': 'dataframe',
+                'variable_df_key_col_name': f'erection_selected_detailed_data: crew cost',
+                'value': value,
+                'non_numeric_value': operation
+            })
+
+        for _, row in self.output_dict['erection_selected_detailed_data'].iterrows():
+            value = row['Mobilization cost USD']
+            crane_boom_operation_concat = row['crane_boom_operation_concat']
+            result.append({
+                'unit': 'usd',
+                'type': 'dataframe',
+                'variable_df_key_col_name': 'erection_selected_detailed_data: mobilization',
+                'value': value,
+                'non_numeric_value': crane_boom_operation_concat
+            })
+
+        for _, row in self.output_dict['erection_selected_detailed_data'].iterrows():
+            value = row['Wind multiplier']
+            operation = row['Operation']
+            result.append({
+                'unit': '',
+                'type': 'dataframe',
+                'variable_df_key_col_name': f'erection_selected_detailed_data: wind multiplier',
+                'value': value,
+                'non_numeric_value': operation
+            })
+
         result.append({
             'unit': 'usd',
             'type': 'variable',
@@ -244,7 +277,7 @@ class ErectionCost(CostModule):
 
         module = type(self).__name__
         for _dict in result:
-            _dict['project'] = self.project_name
+            _dict['project_id_with_serial'] = self.project_name
             _dict['module'] = module
         self.output_dict['erection_cost_csv'] = result
 
@@ -329,6 +362,8 @@ class ErectionCost(CostModule):
         turbine_spacing = float(
             turbine_spacing_rotor_diameters * rotor_diameter_m * km_per_m)
         possible_cranes['Travel time hr'] = turbine_spacing / possible_cranes['Speed of travel km per hr'] * num_turbines
+
+        # CRANE BREAKDOWNS: This is where you could add time for breakdown.
 
         # calculate erection time
         possible_cranes['Operation time hr'] = ((possible_cranes['Lift height m'] / possible_cranes[
@@ -1062,3 +1097,4 @@ class ErectionCost(CostModule):
         # Management crews data
         self.output_dict['management_crews_cost'] = management_crews_cost
         self.output_dict['management_crews_cost_grouped'] = management_crews_cost_grouped
+        self.output_dict['erection_selected_detailed_data'] = selected_detailed_data

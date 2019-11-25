@@ -1,14 +1,14 @@
 import os
 from concurrent import futures
-import logging
-import sys
 
 import pandas as pd
 
 from ..model import Manager
-from .filename_functions import landbosse_input_dir
+from .XlsxFileOperations import XlsxFileOperations
 from .XlsxReader import XlsxReader
 from .XlsxManagerRunner import XlsxManagerRunner
+from .XlsxDataframeCache import XlsxDataframeCache
+from .XlsxGenerator import XlsxGenerator
 
 
 class XlsxParallelManagerRunner(XlsxManagerRunner):
@@ -17,7 +17,7 @@ class XlsxParallelManagerRunner(XlsxManagerRunner):
     with a ProcessPoolExecutor.
     """
 
-    def run_from_project_list_xlsx(self, projects_xlsx, log):
+    def run_from_project_list_xlsx(self, projects_xlsx):
         """
         This function runs all the scenarios in the projects_xlsx file. It creates
         the OrderedDict that holds the results of all the runs. See the return
@@ -27,10 +27,6 @@ class XlsxParallelManagerRunner(XlsxManagerRunner):
 
         Parameters
         ----------
-        log : logger
-            A logger from Pythons library logger.get_logger() for debug output
-            messages.
-
         projects_xlsx : str
             A path name (preferably created with os.path.join()) specific to the
             operating system that is the main input .xlsx file that controls
@@ -48,32 +44,63 @@ class XlsxParallelManagerRunner(XlsxManagerRunner):
             of costs for the spreadsheets.
         """
         # Load the project list
-        projects = pd.read_excel(projects_xlsx, 'Sheet1')
-        # log.debug('>>> Project list loaded')
+        print('Calculating parametric values')
+        extended_project_list = self.read_project_and_parametric_list_from_xlsx()
+
+        # Prepare the file operations
+        file_ops = XlsxFileOperations()
+
+        # Instantiate an XlsxReader to handle the parametrics and master input
+        # dictionaries
+        xlsx_reader = XlsxReader()
 
         # Prep all task for the executor
         all_tasks = []
-        for _, project_series in projects.iterrows():
-            project_data_basename = project_series['Project data file']
+        print(f'Found {len(extended_project_list)} projects for execution')
+        for _, project_parameters in extended_project_list.iterrows():
+
+            # If project_parameters['Project ID with serial'] is null, that means there are no
+            # parametric modifications to the project data dataframes. Hence,
+            # just the plain Project ID without a serial number should be used.
+            if pd.isnull(project_parameters['Project ID with serial']):
+                project_id_with_serial = project_parameters['Project ID']
+            else:
+                project_id_with_serial = project_parameters['Project ID with serial']
+
+            print(f'Preparing {project_id_with_serial}')
+
+            project_data_basename = project_parameters['Project data file']
             task = dict()
-            task['project_data_xlsx'] = os.path.join(landbosse_input_dir(), 'project_data', f'{project_data_basename}.xlsx')
-            task['project_id'] = project_series['Project ID']
-            task['project_series'] = project_series
+
+            task['project_data_sheets'] = XlsxDataframeCache.read_all_sheets_from_xlsx(project_data_basename)
+
+            # Transform the dataframes so that they have the right values for
+            # the parametric variables.
+            xlsx_reader.modify_project_data_dataframes(task['project_data_sheets'], project_parameters)
+
+            # Write all project_data sheets
+            parametric_project_data_path = \
+                os.path.join(file_ops.parametric_project_data_output_path(), f'{project_id_with_serial}_project_data.xlsx')
+            XlsxGenerator.write_project_data(task['project_data_sheets'], parametric_project_data_path)
+
+            task['project_data_basename'] = project_data_basename
+            task['project_id_with_serial'] = project_id_with_serial
+            task['project_series'] = project_parameters
             all_tasks.append(task)
 
         # Execute every project
-        # res = executor.map(download_one, sorted(cc_list))
         with futures.ProcessPoolExecutor() as executor:
             executor_result = executor.map(run_single_project, all_tasks)
 
         # Get the output dictionary ready
-        runs_dict = {project_id: result for project_id, result in executor_result}
+        runs_dict = {project_id_with_serial: result for project_id_with_serial, result in executor_result}
 
         # Assemble the dictionary with content for the details, details with inputs,
         #  cost_by_module_type_operation and cost_by_module_type_operation_with_input tabs
         final_result = dict()
         final_result['details_list'] = self.extract_details_lists(runs_dict)
         final_result['module_type_operation_list'] = self.extract_module_type_operation_lists(runs_dict)
+        final_result['extended_project_list'] = extended_project_list
 
         # Return the runs for all the scenarios.
         return final_result
@@ -122,30 +149,24 @@ def run_single_project(task_dict):
         The str is the project_id. The dict is the resulting output
         dictionary.
     """
-    log = logging.getLogger(__name__)
-    out_hdlr = logging.StreamHandler(sys.stdout)
-    out_hdlr.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
-    out_hdlr.setLevel(logging.DEBUG)
-    log.addHandler(out_hdlr)
-    log.setLevel(logging.DEBUG)
-
-    project_data_xlsx = task_dict['project_data_xlsx']
+    project_data_basename = task_dict['project_data_basename']
     project_series = task_dict['project_series']
-    project_id = task_dict['project_id']
+    project_id_with_serial = task_dict['project_id_with_serial']
+    project_data_sheets = task_dict['project_data_sheets']
 
     # Log each project. Use print because it works better for multiple processes.
-    print(f'START {project_id}, project data in {project_data_xlsx}')
+    print(f'Start {project_id_with_serial}, project data in {project_data_basename}')
 
     # Read the Excel
     xlsx_reader = XlsxReader()
-    master_input_dict = xlsx_reader.read_xlsx_and_fill_defaults(project_data_xlsx, project_series)
+    master_input_dict = xlsx_reader.create_master_input_dictionary(project_data_sheets, project_series)
 
     # Now run the manager and accumulate its result into the runs_dict
     output_dict = dict()
     output_dict['project_series'] = project_series
-    mc = Manager(input_dict=master_input_dict, output_dict=output_dict, log=log)
-    mc.execute_landbosse(project_name=project_id)
+    mc = Manager(input_dict=master_input_dict, output_dict=output_dict)
+    mc.execute_landbosse(project_name=project_id_with_serial)
 
-    print(f'END {project_id}')
+    print(f'End {project_id_with_serial}')
 
-    return project_id, output_dict
+    return project_id_with_serial, output_dict

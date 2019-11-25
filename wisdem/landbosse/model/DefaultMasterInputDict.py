@@ -1,17 +1,3 @@
-def default_master_input_dict():
-    """
-    Returns a master input dictionary populated with entirely defualt values
-
-    Currently it does not return any of the keys that require dataframes.
-    It only returns the keys that have simple values.
-
-    Returns
-    -------
-    dict
-        Default values for the master input dict
-    """
-
-
 class DefaultMasterInputDict:
     """
     DefaultMasterInput is a class that handles all the default values
@@ -35,7 +21,7 @@ class DefaultMasterInputDict:
     def populate_input_dict(self, incomplete_input_dict):
         """
         Completely fills the input_dict. If there are any keys in the
-        default input dictionary that are not on input_dict, those
+        default input dictionary that are not on incomplete_input_dict, those
         missing key/value pairs are placed on a fully populated input
         dictionary.
 
