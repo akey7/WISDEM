@@ -429,7 +429,7 @@ class pyIECWind_turb():
         self.z_hub = 90.             # wind turbine hub height (m)
         self.D = 126.                # rotor diameter (m)
         self.PLExp = 0.2
-        self.AnalysisTime = 630.
+        self.AnalysisTime = 720.
         self.debug_level = 0
         self.overwrite = True
 
@@ -439,8 +439,8 @@ class pyIECWind_turb():
         turbsim_vt.runtime_options.WrADTWR    = False
         turbsim_vt.tmspecs.AnalysisTime       = self.AnalysisTime
         turbsim_vt.tmspecs.HubHt              = self.z_hub
-        turbsim_vt.tmspecs.GridHeight         = np.ceil(self.D*1.2)
-        turbsim_vt.tmspecs.GridWidth          = np.ceil(self.D*1.2)
+        turbsim_vt.tmspecs.GridHeight         = np.ceil(self.D*1.05)
+        turbsim_vt.tmspecs.GridWidth          = np.ceil(self.D*1.05)
         turbsim_vt.tmspecs.NumGrid_Z          = 21
         turbsim_vt.tmspecs.NumGrid_Y          = 21
         turbsim_vt.tmspecs.HFlowAng           = 0.0
@@ -449,7 +449,7 @@ class pyIECWind_turb():
         turbsim_vt.metboundconds.UserFile     = '"unused"'
         turbsim_vt.metboundconds.IECturbc     = self.Turbulence_Class
         turbsim_vt.metboundconds.IEC_WindType = self.IEC_WindType
-        turbsim_vt.metboundconds.ETMc         = 2.
+        turbsim_vt.metboundconds.ETMc         = '"default"'
         turbsim_vt.metboundconds.WindProfileType = '"PL"'
         turbsim_vt.metboundconds.ProfileFile  = '"unused"'
         turbsim_vt.metboundconds.RefHt        = self.z_hub
@@ -484,13 +484,16 @@ class pyIECWind_turb():
         # self.case_name += '_U%1.1f'%self.Uref + '_Seed%1.1f'%self.seed
         # self.case_name += '_U%d'%self.Uref + '_Seed%d.in'%self.seed
 
-        case_name = self.case_name + '_U%1.6f'%self.Uref + '_Seed%1.1f'%self.seed
+        case_name = self.case_name + '_' + IEC_WindType + '_U%1.6f'%self.Uref + '_Seed%1.1f'%self.seed
+        
         tsim_input_file = case_name + '.in'
         wind_file_out   = case_name + '.bts'
+        
+        wind_file_out_abs = os.path.realpath(os.path.normpath(os.path.join(self.outdir, wind_file_out)))
 
         # If wind file already exists and overwriting is turned off, skip wind file write
         if os.path.exists(os.path.join(self.outdir, wind_file_out)) and not self.overwrite:
-            return wind_file_out, 3
+            return wind_file_out_abs, 3
 
         # Run wind file generation
         else:
@@ -505,7 +508,7 @@ class pyIECWind_turb():
             wrapper.debug_level = self.debug_level
             wrapper.execute()
 
-            return wind_file_out, 3
+            return wind_file_out_abs, 3
 
 
 def example_ExtremeWind():

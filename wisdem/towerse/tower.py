@@ -226,7 +226,7 @@ class TowerPreFrame(ExplicitComponent):
         # Prepare for reactions: rigid at tower base
         outputs['kidx'] = np.array([ 0 ], dtype=np.int_)
         if discrete_inputs['monopile']:
-            kmono = discrete_inputs['k_monopile']
+            kmono = inputs['k_monopile']
             outputs['kx']   = np.array([ kmono[0] ]).flatten()
             outputs['ky']   = np.array([ kmono[2] ]).flatten()
             outputs['kz']   = np.array([ kmono[4] ]).flatten()
@@ -426,7 +426,7 @@ class TowerLeanSE(Group):
         self.add_subsystem('cm', CylinderMass(nPoints=nFull), promotes=['material_density','z_full','d_full','t_full',
                                                       'material_cost_rate','labor_cost_rate','painting_cost_rate'])
         self.add_subsystem('tm', TowerMass(nPoints=nFull), promotes=['tower_mass','tower_center_of_mass','tower_I_base','tower_raw_cost'])
-        self.add_subsystem('gc', Util.GeometricConstraints(nPoints=nPoints), promotes=['min_d_to_t','max_taper','manufacturability','weldability'])
+        self.add_subsystem('gc', Util.GeometricConstraints(nPoints=nPoints), promotes=['min_d_to_t','max_taper','manufacturability','weldability','slope'])
         self.add_subsystem('turb', TurbineMass(), promotes=['turbine_mass','rna_mass', 'rna_cg', 'rna_I','hub_height'])
         
         # Connections for geometry and mass
@@ -630,6 +630,7 @@ class TowerSE(Group):
                 self.connect('wave_beta', 'waveLoads'+lc+'.beta')
                 self.connect('significant_wave_height', 'wave'+lc+'.hmax')
                 self.connect('significant_wave_period', 'wave'+lc+'.T')
+                self.connect('z_full', 'z_floor', src_indices=[0])
                     
                 self.connect('wind'+lc+'.U', 'windLoads'+lc+'.U')
                 self.connect('wave'+lc+'.U', 'waveLoads'+lc+'.U')

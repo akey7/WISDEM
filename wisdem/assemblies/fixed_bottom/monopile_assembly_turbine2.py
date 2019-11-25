@@ -29,17 +29,18 @@ class MonopileTurbine(Group):
         self.options.declare('FASTpref', default={})
         self.options.declare('Nsection_Tow', default = 6)
         self.options.declare('VerbosityCosts', default = True)
+        self.options.declare('user_update_routine',     default=None)
         
         
     def setup(self):
         
-        RefBlade     = self.options['RefBlade']
-        Nsection_Tow = self.options['Nsection_Tow']        
+        RefBlade            = self.options['RefBlade']
+        Nsection_Tow        = self.options['Nsection_Tow']        
+        user_update_routine = self.options['user_update_routine']
         if 'Analysis_Level' in self.options['FASTpref']:
-            Analysis_Level = self.options['FASTpref']['Analysis_Level']
+            Analysis_Level  = self.options['FASTpref']['Analysis_Level']
         else:
-            Analysis_Level = 0
-        
+            Analysis_Level  = 0
         
         # Define all input variables from all models
         myIndeps = IndepVarComp()
@@ -99,10 +100,11 @@ class MonopileTurbine(Group):
                                               npts_coarse_power_curve=20,
                                               npts_spline_power_curve=200,
                                               regulation_reg_II5=True,
-                                              regulation_reg_III=False,
+                                              regulation_reg_III=True,
                                               Analysis_Level=Analysis_Level,
                                               FASTpref=self.options['FASTpref'],
-                                              topLevelFlag=True), promotes=['*'])
+                                              topLevelFlag=True,
+                                              user_update_routine=user_update_routine), promotes=['*'])
         
         self.add_subsystem('drive', DriveSE(debug=False,
                                             number_of_main_bearings=1,
@@ -116,7 +118,8 @@ class MonopileTurbine(Group):
                                          nPoints=Nsection_Tow+1,
                                          nFull=5*Nsection_Tow+1,
                                          wind='PowerWind',
-                                         topLevelFlag=False),
+                                         topLevelFlag=False,
+                                         monopile=True),
                            promotes=['water_density','water_viscosity','wave_beta',
                                      'significant_wave_height','significant_wave_period',
                                      'material_density','E','G','tower_section_height',
@@ -197,17 +200,27 @@ class MonopileTurbine(Group):
 def Init_MonopileTurbine(prob, blade, Nsection_Tow, Analysis_Level = 0, fst_vt = {}):
 
     prob = Init_RotorSE_wRefBlade(prob, blade, Analysis_Level = Analysis_Level, fst_vt = fst_vt)
-    
-    
+
     # Environmental parameters for the tower
     # prob['wind_reference_speed']           = 11.0
     prob['wind_reference_height']          = prob['hub_height']
+    prob['shearExp']                       = 0.11
+    prob['rho']                            = 1.225
+    prob['mu']                             = 1.7934e-5
+    prob['water_density']                  = 1025.0
+    prob['water_viscosity']                = 1.3351e-3
+    prob['wind_beta'] = prob['wave_beta'] = 0.0
+    prob['significant_wave_height']        = 5.0
+    prob['significant_wave_period']        = 10.0
+    prob['monopile']                       = True
 
     # Steel properties for the tower
     prob['material_density']               = 7850.0
-    prob['E']                              = 200e9
+    prob['E']                              = 210e9
     prob['G']                              = 79.3e9
-    prob['yield_stress']                   = 3.45e8
+    prob['yield_stress']                   = 345e6
+    prob['soil_G']                         = 140e6
+    prob['soil_nu']                        = 0.4
 
     # Design constraints
     prob['max_taper_ratio']                = 0.4
