@@ -1,6 +1,6 @@
 import openmdao.api as om
 
-class LandBOSSEComponent(om.ExplicitComponent):
+class LandBOSSEBaseComponent(om.ExplicitComponent):
     """
     This is a superclass for all the components that wrap LandBOSSE
     cost modules. It holds functionality used for the other components

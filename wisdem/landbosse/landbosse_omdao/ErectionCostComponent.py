@@ -1,7 +1,7 @@
-from .LandBOSSEParentComponent import LandBOSSEComponent
+from .LandBOSSEParentComponent import LandBOSSEBaseComponent
 from wisdem.landbosse.model import ErectionCost
 
-class ErectionCostComopnent(LandBOSSEComponent):
+class ErectionCostComopnent(LandBOSSEBaseComponent):
     """
     This class is an OpenMDAO wrapper around the ErectionCost component.
     """
