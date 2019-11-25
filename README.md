@@ -62,13 +62,15 @@ The installation instructions below use the environment name, "wisdem-env," but 
 
         conda install -y git jupyter
         git clone https://github.com/WISDEM/WISDEM.git
-	cd WISDEM/tutorial-notebooks
-	jupyter notebook
+        cd WISDEM/tutorial-notebooks
+        jupyter notebook
 
-2.  FOR DEVELOPERS (NOT USERS): Use conda to install the build dependencies, but then install WISDEM from source
+2.  FOR DEVELOPERS (NOT USERS): Use conda to install the build dependencies, but then install WISDEM from source.  Not the differences between Windows and Mac/Linux build systems
 
         conda install -y wisdem git jupyter
         conda remove --force wisdem
+        conda install compilers     # (Mac / Linux only)
+        conda install m2w64-toolchain libpython       # (Windows only)
         git clone https://github.com/WISDEM/WISDEM.git
         cd WISDEM
         python setup.py develop
