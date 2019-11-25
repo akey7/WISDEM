@@ -73,7 +73,15 @@ class CaseGen_IEC():
                 TMax = 630.
 
             elif dlc == 1.3:
-                IEC_WindType = 'ETM'
+                if self.Turbine_Class == 'I':
+                    x = 1
+                elif self.Turbine_Class == 'II':
+                    x = 2
+                elif self.Turbine_Class == 'III':
+                    x = 3
+                else:
+                    exit('Class of the WT is needed for the ETM wind, but it is currently not set to neither 1,2 or 3.')
+                IEC_WindType = '%uETM'%x
                 alpha = 0.11
                 iecwind = pyIECWind_turb()
                 TMax = 630.
@@ -100,7 +108,7 @@ class CaseGen_IEC():
             iecwind.z_hub = self.z_hub
             iecwind.D = self.D
             iecwind.PLExp = alpha
-
+            
             iecwind.outdir = self.wind_dir
             iecwind.case_name = self.case_name_base
             iecwind.Turbsim_exe = self.Turbsim_exe
@@ -185,13 +193,12 @@ class CaseGen_IEC():
                     U_out.extend(U_out_i)
                     WindFile_out.extend(WindFile_out_i)
                     WindFile_type_out.extend(WindFile_type_out_i)
-
+            
             # Set FAST variables from DLC setup
             if ("Fst","TMax") not in case_inputs_i:
                 case_inputs_i[("Fst","TMax")] = {'vals':[TMax], 'group':0}
             case_inputs_i[("InflowWind","WindType")] = {'vals':WindFile_type_out, 'group':1}
             case_inputs_i[("InflowWind","Filename")] = {'vals':WindFile_out, 'group':1}
-
             # Set FAST variables from inital conditions
             if self.init_cond:
                 for var in self.init_cond.keys():
