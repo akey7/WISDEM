@@ -74,7 +74,7 @@ class DataframeCache:
             xlsx[sheet_name] = pd.read_excel(xlsx_path, sheet_name=sheet_name)
             return xlsx[sheet_name]
 
-        # If the spreadsheet has never been read and
+        # If the spreadsheet has never been read
         else:
             xlsx_dict = dict()
             sheet = pd.read_excel(xlsx_path, sheet_name=sheet_name)

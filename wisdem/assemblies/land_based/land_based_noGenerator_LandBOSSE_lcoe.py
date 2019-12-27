@@ -337,6 +337,18 @@ def Init_LandBasedAssembly(prob, blade, Nsection_Tow, Analysis_Level=0, fst_vt={
     )
     prob['equip_price'] = equip_price_df
 
+    material_price_df = DataframeCache.read_xlsx_sheet(
+        'foundation_validation_ge15',
+        'material_price'
+    )
+    prob['material_price'] = material_price_df
+
+    rsmeans_df = DataframeCache.read_xlsx_sheet(
+        'foundation_validation_ge15',
+        'rsmeans'
+    )
+    prob['rsmeans'] = rsmeans_df
+
     prob['project_value_usd'] = 5e7
     prob['foundation_cost_usd'] = 1e7
 

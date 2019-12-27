@@ -203,7 +203,6 @@ class FoundationCost(CostModule):
         self._cubicyd_per_cubicm = 1.30795
         self._ton_per_tonne = 0.907185
 
-
     def calculate_foundation_load(self, foundation_load_input_data, foundation_load_output_data):
         """
 

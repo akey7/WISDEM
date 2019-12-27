@@ -3,6 +3,7 @@ import openmdao.api as om
 from .DummyComponent import DummyComponent
 from .ManagementCostComponent import ManagementCostComponent
 from .ErectionCostComponent import ErectionCostComopnent
+from .FoundationCostComponent import FoundationCostComponent
 
 class LandBOSSEGroup(om.Group):
     def initialize(self):
@@ -19,7 +20,7 @@ class LandBOSSEGroup(om.Group):
         indeps.add_output('construct_duration', val=9, desc='Total project construction time (months)')
         indeps.add_output('hub_height_meters', val=80, units='m', desc='Hub height m')
         indeps.add_output('rotor_diameter_m', val=77, units='m', desc='Rotor diameter m')
-        indeps.add_output('wind_shear_exponent', val=0.2, units='m', desc='Wind shear exponent')
+        indeps.add_output('wind_shear_exponent', val=0.2, desc='Wind shear exponent')
         indeps.add_output('turbine_rating_MW', val=1.5, units='MW', desc='Turbine rating MW')
         indeps.add_output('num_turbines', val=100, desc='Number of turbines in project')
         indeps.add_output('fuel_cost_usd_per_gal', val=1.0, desc='Fuel cost USD/gal')
@@ -71,7 +72,7 @@ class LandBOSSEGroup(om.Group):
 
 
         indeps.add_output('critical_speed_non_erection_wind_delays_m_per_s', units='m/s', desc='Non-Erection Wind Delay Critical Speed (m/s)', val=15)
-        indeps.add_output('critical_height_non_erection_wind_delays_m', units='m/s', desc='Non-Erection Wind Delay Critical Height (m)', val=10)
+        indeps.add_output('critical_height_non_erection_wind_delays_m', units='m', desc='Non-Erection Wind Delay Critical Height (m)', val=10)
         indeps.add_output('road_width_ft', units='ft', desc='Road width (ft)', val=20)
 
         # Can't add units
@@ -91,7 +92,10 @@ class LandBOSSEGroup(om.Group):
         indeps.add_output('markup_overhead', desc='Markup overhead', val=0.05)
         indeps.add_output('markup_profit_margin', desc='Markup profit margin', val=0.05)
 
-        # Discrete inputs like dataframes
+        # Numeric inputs, NumPy arrays
+        indeps.add_output('Mass tonne', val=(1.,), desc='', units='t')
+
+        # Discrete inputs, including dataframes
         indeps.add_discrete_output('site_facility_building_area_df', val=None, desc='site_facility_building_area DataFrame')
         indeps.add_discrete_output('components', val=None, desc='Dataframe of components for tower, blade, nacelle')
         indeps.add_discrete_output('crane_specs', val=None, desc='Dataframe of specifications of cranes')
@@ -100,6 +104,7 @@ class LandBOSSEGroup(om.Group):
         indeps.add_discrete_output('crew_price', val=None, desc='Dataframe of costs per hour for each type of worker.')
         indeps.add_discrete_output('equip', val=None, desc='Collections of equipment to perform erection operations.')
         indeps.add_discrete_output('equip_price', val=None, desc='Prices for various type of equipment.')
+        indeps.add_discrete_output('rsmeans', val=None, desc='RSMeans price data')
 
         indeps.add_discrete_output(
             'allow_same_flag',
@@ -119,8 +124,15 @@ class LandBOSSEGroup(om.Group):
             val='normal'
         )
 
+        indeps.add_discrete_output(
+            'material_price',
+            desc='Prices of materials for foundations and roads',
+            val=None
+        )
+
         self.add_subsystem('management_cost', ManagementCostComponent(), promotes=['*'])
         self.add_subsystem('erection_cost', ErectionCostComopnent(), promotes=['*'])
+        self.add_subsystem('foundation_cost', FoundationCostComponent(), promotes=['*'])
 
 # Calculate this input instead
 # self.add_input('project_size_megawatts', units='MW', desc='(Number of turbines) * (Turbine rating MW)', value=)

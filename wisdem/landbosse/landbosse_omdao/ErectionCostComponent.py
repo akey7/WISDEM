@@ -1,6 +1,7 @@
 from .LandBOSSEParentComponent import LandBOSSEBaseComponent
 from wisdem.landbosse.model import ErectionCost
 
+
 class ErectionCostComopnent(LandBOSSEBaseComponent):
     """
     This class is an OpenMDAO wrapper around the ErectionCost component.
@@ -14,7 +15,7 @@ class ErectionCostComopnent(LandBOSSEBaseComponent):
         self.add_input('overtime_multiplier', val=1.0)
         self.add_input('fuel_cost_usd_per_gal', val=1.0)
         self.add_input('construct_duration', val=9)
-        self.add_input('wind_shear_exponent', val=0.2, units='m')
+        self.add_input('wind_shear_exponent', val=0.2)
         self.add_input('turbine_rating_MW', val=1.5, units='MW')
 
         self.add_input('turbine_spacing_rotor_diameters', val=1.0)
@@ -39,9 +40,7 @@ class ErectionCostComopnent(LandBOSSEBaseComponent):
 
         # Inputs, discrete, non dataframes
         self.add_discrete_input('allow_same_flag', val=False)
-
         self.add_discrete_input('hour_day', val={'long': 24, 'normal': 10})
-
         self.add_discrete_input('time_construct', val='normal')
 
         # Outputs, continuous
