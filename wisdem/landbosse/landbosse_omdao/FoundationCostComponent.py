@@ -83,9 +83,11 @@ class FoundationCostComponent(LandBOSSEBaseComponent):
         module.run_module()
 
         # Copy outputs to the discrete outputs
-        
+
 
         # Report the cost outputs if needed
         if self.options['verbosity']:
             self.print_verbose_module_type_operation(type(self).__name__,
                                                      master_outputs_dict['foundation_module_type_operation'])
+            self.print_verbose_details(type(self).__name__,
+                                       master_outputs_dict['foundation_csv'])

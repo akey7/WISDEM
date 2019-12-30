@@ -774,7 +774,7 @@ class FoundationCost(CostModule):
             _dict['project_id_with_serial'] = self.project_name
             _dict['module'] = module
 
-        self.output_dict['foundation_cost_csv'] = result
+        self.output_dict['foundation_csv'] = result
         return result
 
     def outputs_for_module_type_operation(self, input_dict, output_dict):

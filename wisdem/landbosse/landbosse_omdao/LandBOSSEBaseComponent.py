@@ -32,7 +32,7 @@ class LandBOSSEBaseComponent(om.ExplicitComponent):
             The list of dictionaries of costs to print.
         """
         print('################################################')
-        print(f'LandBOSSE {module_name}')
+        print(f'LandBOSSE {module_name} costs by module, type and operation')
         for row in module_type_operation:
             operation_id = row['operation_id']
             type_of_cost = row['type_of_cost']
@@ -41,3 +41,26 @@ class LandBOSSEBaseComponent(om.ExplicitComponent):
             usd_per_kw = round(row['usd_per_kw_per_project'], 2)
             print(f'{operation_id}\t{type_of_cost}\t${cost_per_turbine}/turbine\t${cost_per_project}/project\t${usd_per_kw}/kW')
         print('################################################')
+
+    def print_verbose_details(self, module_name, details):
+        """
+        This method prints the verbose details output of a module.
+
+        Parameters
+        ----------
+        module_name : str
+            The name of the cost module reporting thee details
+
+        details : list[dict]
+            The list of dictionaries that contain the details to be
+            printed.
+        """
+        print('################################################')
+        print(f'LandBOSSE {module_name} detailed outputs')
+        for row in details:
+            unit = row['unit']
+            name = row['variable_df_key_col_name']
+            value = row['value']
+            print(f'{name}\t{unit}\t{value}')
+        print('################################################')
+
