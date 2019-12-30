@@ -150,5 +150,7 @@ class ErectionCostComopnent(LandBOSSEBaseComponent):
 
         # Log the outputs if needed
         if self.options['verbosity']:
-            self.print_verbose_module_type_operation('ErectionCost',
+            self.print_verbose_module_type_operation(type(self).__name__,
                                                      master_outputs_dict['erection_module_type_operation'])
+            self.print_verbose_details(type(self).__name__,
+                                       master_outputs_dict['erection_cost_csv'])
