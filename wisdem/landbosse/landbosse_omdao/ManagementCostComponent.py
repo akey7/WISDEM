@@ -1,6 +1,6 @@
 import openmdao.api as om
 from wisdem.landbosse.model import ManagementCost
-from .LandBOSSEParentComponent import LandBOSSEBaseComponent
+from .LandBOSSEBaseComponent import LandBOSSEBaseComponent
 
 
 class ManagementCostComponent(LandBOSSEBaseComponent):

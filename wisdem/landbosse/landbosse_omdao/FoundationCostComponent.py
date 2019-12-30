@@ -1,6 +1,6 @@
 import numpy as np
 
-from .LandBOSSEParentComponent import LandBOSSEBaseComponent
+from .LandBOSSEBaseComponent import LandBOSSEBaseComponent
 from wisdem.landbosse.model import FoundationCost
 
 
@@ -22,11 +22,6 @@ class FoundationCostComponent(LandBOSSEBaseComponent):
         self.add_input('turbine_rating_MW', units='MW', val=1.)
         self.add_input('critical_speed_non_erection_wind_delays_m_per_s', units='m/s', val=1)
         self.add_input('critical_height_non_erection_wind_delays_m', units='m', val=1)
-
-        # indeps.add_output('critical_speed_non_erection_wind_delays_m_per_s', units='m/s',
-        #                   desc='Non-Erection Wind Delay Critical Speed (m/s)', val=15)
-        # indeps.add_output('critical_height_non_erection_wind_delays_m', units='m/s',
-        #                   desc='Non-Erection Wind Delay Critical Height (m)', val=10)
 
         # Discrete inputs
         self.add_discrete_input('project_data', val=None)
@@ -56,6 +51,7 @@ class FoundationCostComponent(LandBOSSEBaseComponent):
         self.add_discrete_output('operation_data_id_days_crews_workers', val=None)
         self.add_discrete_output('material_needs_per_turbine', val=None)
         self.add_discrete_output('total_foundation_cost', val=None)
+        self.add_discrete_input('foundation_cost_csv', val=None)
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
         # Create real dictionaries to pass to the module
@@ -86,15 +82,10 @@ class FoundationCostComponent(LandBOSSEBaseComponent):
         module = FoundationCost(master_inputs_dict, master_outputs_dict, 'WISDEM')
         module.run_module()
 
-        # Copy the numeric outputs into the outputs object
-        # for key in outputs.keys():
-        #     outputs[key] = master_outputs_dict[key]
+        # Copy outputs to the discrete outputs
+        
 
-        discrete_outputs['operation_data_id_days_crews_workers'] =\
-            master_outputs_dict['operation_data_id_days_crews_workers']
-
-        discrete_outputs['material_needs_per_turbine'] =\
-            master_outputs_dict['material_needs_per_turbine']
-
-        discrete_outputs['total_foundation_cost'] =\
-            master_outputs_dict['total_foundation_cost']
+        # Report the cost outputs if needed
+        if self.options['verbosity']:
+            self.print_verbose_module_type_operation(type(self).__name__,
+                                                     master_outputs_dict['foundation_module_type_operation'])

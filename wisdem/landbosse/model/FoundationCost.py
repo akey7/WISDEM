@@ -845,8 +845,6 @@ class FoundationCost(CostModule):
             self.calculate_weather_delay(self.weather_input_dict, self.output_dict)
             self.calculate_costs(self.input_dict, self.output_dict)
             self.outputs_for_detailed_tab(self.input_dict, self.output_dict)
-            # self.output_dict['labor_equip_data']
-            # self.output_dict['foundation_module_type_operation'] = self.outputs_for_module_type_operation(self.input_dict, self.output_dict)
             self.output_dict['foundation_module_type_operation'] = self.outputs_for_costs_by_module_type_operation(
                 input_df=self.output_dict['total_foundation_cost'],
                 project_id=self.project_name,

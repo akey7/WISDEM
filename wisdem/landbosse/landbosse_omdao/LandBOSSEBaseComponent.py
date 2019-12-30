@@ -1,5 +1,6 @@
 import openmdao.api as om
 
+
 class LandBOSSEBaseComponent(om.ExplicitComponent):
     """
     This is a superclass for all the components that wrap LandBOSSE
